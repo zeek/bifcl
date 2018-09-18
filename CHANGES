@@ -1,4 +1,8 @@
 
+1.1 | 2018-08-31 15:23:21 -0500
+
+  * Add Makefile (Jon Siwek, Corelight)
+
 1.0-1 | 2018-07-24 01:58:34 +0000
 
   * Fix compiler warning. (Robin Sommer, Corelight)
