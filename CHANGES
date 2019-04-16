@@ -1,4 +1,12 @@
 
+1.1-10 | 2019-04-16 11:48:09 -0700
+
+  * Change file extension of auto-generated script files to .zeek (Daniel Thayer)
+
+  * Use ValManager for creating Vals (Jon Siwek, Corelight)
+
+  * Update submodules to use github.com/zeek (Jon Siwek, Corelight)
+
 1.1 | 2018-08-31 15:23:21 -0500
 
   * Add Makefile (Jon Siwek, Corelight)
