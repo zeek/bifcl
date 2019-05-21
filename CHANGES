@@ -1,4 +1,10 @@
 
+1.1-16 | 2019-05-20 19:38:17 -0700
+
+  * Rename Bro to Zeek (Daniel Thayer)
+
+  * Update codegen to use faster val_list and event queue API (Jon Siwek, Corelight)
+
 1.1-10 | 2019-04-16 11:48:09 -0700
 
   * Change file extension of auto-generated script files to .zeek (Daniel Thayer)
