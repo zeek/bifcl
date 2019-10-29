@@ -1,4 +1,15 @@
 
+1.2-9 | 2019-10-28 17:58:16 -0700
+
+  * Move CMake project() after cmake_minimum_required() (Jon Siwek, Corelight)
+
+  * Move headers into include/ subdir (Jon Siwek, Corelight)
+
+    This avoids potential problems with libc++ 8+ on case-insensitive file
+    systems due to inclusion of a new header called <version> which will end
+    up conflicting with the VERSION file if the search path includes the
+    project root.
+
 1.2 | 2019-06-12 15:01:17 -0700
 
   * Release 1.2.
