@@ -1,4 +1,10 @@
 
+1.2-14 | 2020-01-03 09:53:56 -0700
+
+  * Disable LeakSanitizer
+
+    Related to https://github.com/zeek/zeek/issues/699 (Jon Siwek, Corelight)
+
 1.2-9 | 2019-10-28 17:58:16 -0700
 
   * Move CMake project() after cmake_minimum_required() (Jon Siwek, Corelight)
