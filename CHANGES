@@ -1,4 +1,18 @@
 
+1.3.0-20 | 2020-04-24 16:17:33 -0700
+
+  * Deprecate BifEvent::generate_*, add BifEvent::enqueue_* (Jon Siwek, Corelight)
+
+  * Update deprecated Connection::BuildConnVal usage (Jon Siwek, Corelight)
+
+  * Return nullptr instead of 0 in BIF error conditions (Jon Siwek, Corelight)
+
+  * Update deprecated ValManager::Get usages (Jon Siwek, Corelight)
+
+  * Change BIFs to return a wrapper object
+
+    That allows implicit conversion from either Val* or IntrusivePtr<T> (Jon Siwek, Corelight)
+
 1.3.0-13 | 2020-04-16 13:50:22 -0700
 
   * Remove use of Variable-Length-Arrays (Jon Siwek, Corelight)
