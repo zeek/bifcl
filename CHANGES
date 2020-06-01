@@ -1,4 +1,34 @@
 
+1.3.0-35 | 2020-06-01 10:58:45 -0700
+
+  * Change constructor for BroFile args (Jon Siwek, Corelight)
+
+  * Switch zeek::id::lookup to zeek::id::find (Jon Siwek, Corelight)
+
+  * Use zeek::BifEvent:: for enqueue_ functions instead of BifEvent::
+
+    The old BifEvent::generate_ functions were already deprecated (Jon Siwek, Corelight)
+
+  * Deprecate BifFunc:: declarations, replace with zeek::BifFunc::
+
+    Also changes name of function slightly, example: bro_fmt -> fmt_bif. (Jon Siwek, Corelight)
+
+  * Deprecate names in BifConst, replace with zeek::BifConst
+
+    Some Val* types are also replaced with IntrusivePtr (Jon Siwek, Corelight)
+
+  * Deprecate all BroType* in BifType:: namespace
+
+    Replaced with equivalently named IntrusivePtr in zeek::BifType:: (Jon Siwek, Corelight)
+
+  * Change internal_handler() usage (Jon Siwek, Corelight)
+
+  * Renaming/scoping of lookup functions (Jon Siwek, Corelight)
+
+  * Replace deprecated use of internal_const_val() (Jon Siwek, Corelight)
+
+  * Update deprecated use of internal_type() (Jon Siwek, Corelight)
+
 1.3.0-20 | 2020-04-24 16:17:33 -0700
 
   * Deprecate BifEvent::generate_*, add BifEvent::enqueue_* (Jon Siwek, Corelight)

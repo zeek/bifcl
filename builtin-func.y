@@ -124,7 +124,7 @@ void set_decl_name(const char *name)
 		decl.generate_c_namespace_start = "namespace BifEvent { ";
 		decl.generate_c_namespace_end = " } ";
 		decl.generate_c_fullname = "BifEvent::";
-		decl.enqueue_c_fullname = "BifEvent::";
+		decl.enqueue_c_fullname = "zeek::BifEvent::";
 		break;
 
 	default:
@@ -145,9 +145,6 @@ void set_decl_name(const char *name)
 		}
 
 	decl.bro_fullname += decl.bare_name;
-	if ( definition_type == FUNC_DEF )
-		decl.bare_name = string("bro_") + decl.bare_name;
-
 	decl.c_fullname += decl.bare_name;
 	decl.bro_name += name;
 	decl.generate_c_fullname += decl.generate_bare_name;
@@ -165,11 +162,13 @@ static struct {
 	const char* c_type;
 	const char* c_type_smart;
 	const char* accessor;
+	const char* accessor_smart;
+	const char* cast_smart;
 	const char* constructor;
 	const char* ctor_smatr;
 } builtin_types[] = {
-#define DEFINE_BIF_TYPE(id, bif_type, bro_type, c_type, c_type_smart, accessor, constructor, ctor_smart) \
-	{bif_type, bro_type, c_type, c_type_smart, accessor, constructor, ctor_smart},
+#define DEFINE_BIF_TYPE(id, bif_type, bro_type, c_type, c_type_smart, accessor, accessor_smart, cast_smart, constructor, ctor_smart) \
+	{bif_type, bro_type, c_type, c_type_smart, accessor, accessor_smart, cast_smart, constructor, ctor_smart},
 #include "bif_type.def"
 #undef DEFINE_BIF_TYPE
 };
@@ -221,12 +220,12 @@ static void print_event_c_prototype_args(FILE* fp, bool smart)
 static void print_event_c_prototype_header(FILE* fp, bool smart)
 	{
 	if ( smart )
-		fprintf(fp, "%s void %s(analyzer::Analyzer* analyzer%s",
+		fprintf(fp, "namespace zeek { %s void %s(analyzer::Analyzer* analyzer%s",
 		        decl.generate_c_namespace_start.c_str(),
 		        decl.enqueue_c_barename.c_str(),
 		        args.size() ? ", " : "" );
 	else
-		fprintf(fp, "%s [[deprecated(\"Remove in 4.1. Use %s instead.\")]] void %s(analyzer::Analyzer* analyzer%s",
+		fprintf(fp, "%s [[deprecated(\"Remove in 4.1. Use %s.\")]] void %s(analyzer::Analyzer* analyzer%s",
 		        decl.generate_c_namespace_start.c_str(),
 		        decl.enqueue_c_fullname.c_str(),
 		        decl.generate_bare_name.c_str(),
@@ -235,7 +234,7 @@ static void print_event_c_prototype_header(FILE* fp, bool smart)
 
 	print_event_c_prototype_args(fp, smart);
 	fprintf(fp, ")");
-	fprintf(fp, "; %s\n", decl.generate_c_namespace_end.c_str());
+	fprintf(fp, "; %s%s\n", decl.generate_c_namespace_end.c_str(), smart ? " }" : "");
 	}
 
 static void print_event_c_prototype_impl(FILE* fp, bool smart)
@@ -380,16 +379,28 @@ type_def:	TOK_TYPE opt_ws TOK_ID opt_ws ':' opt_ws type_def_types opt_ws ';'
 			{
 			set_decl_name($3);
 
-			fprintf(fp_netvar_h, "%s extern %sType * %s; %s\n",
+			fprintf(fp_netvar_h, "namespace zeek { %s extern IntrusivePtr<%sType> %s; %s}\n",
+				decl.c_namespace_start.c_str(), type_name.c_str(),
+				decl.bare_name.c_str(), decl.c_namespace_end.c_str());
+			fprintf(fp_netvar_h, "%s [[deprecated(\"Remove in v4.1.  Use zeek::%s.\")]] extern %sType * %s; %s\n",
+				decl.c_namespace_start.c_str(), decl.c_fullname.c_str(), type_name.c_str(),
+				decl.bare_name.c_str(), decl.c_namespace_end.c_str());
+
+
+			fprintf(fp_netvar_def, "namespace zeek { %s IntrusivePtr<%sType> %s; %s}\n",
 				decl.c_namespace_start.c_str(), type_name.c_str(),
 				decl.bare_name.c_str(), decl.c_namespace_end.c_str());
 			fprintf(fp_netvar_def, "%s %sType * %s; %s\n",
 				decl.c_namespace_start.c_str(), type_name.c_str(),
 				decl.bare_name.c_str(), decl.c_namespace_end.c_str());
+
 			fprintf(fp_netvar_init,
-				"\t%s = internal_type(\"%s\")->As%sType();\n",
-				decl.c_fullname.c_str(), decl.bro_fullname.c_str(),
-				type_name.c_str());
+				"\tzeek::%s = zeek::id::find_type<%sType>(\"%s\");\n",
+				decl.c_fullname.c_str(), type_name.c_str(),
+				decl.bro_fullname.c_str());
+			fprintf(fp_netvar_init,
+				"\t%s = zeek::%s.get();\n",
+				decl.c_fullname.c_str(), decl.c_fullname.c_str());
 
 			record_bif_item(decl.bro_fullname.c_str(), "TYPE");
 			}
@@ -442,13 +453,23 @@ enum_def:	enum_def_1 enum_list TOK_RPB opt_attr_list
 				fprintf(fp_netvar_h, "}; }\n");
 
 			// Now generate the netvar's.
-			fprintf(fp_netvar_h, "%s extern EnumType * %s; %s\n",
+			fprintf(fp_netvar_h, "namespace zeek { %s extern IntrusivePtr<EnumType> %s; %s}\n",
+				decl.c_namespace_start.c_str(), decl.bare_name.c_str(), decl.c_namespace_end.c_str());
+			fprintf(fp_netvar_h, "%s [[deprecated(\"Remove in v4.1.  Use zeek::%s.\")]] extern EnumType * %s; %s\n",
+				decl.c_namespace_start.c_str(), decl.c_fullname.c_str(),
+				decl.bare_name.c_str(), decl.c_namespace_end.c_str());
+
+			fprintf(fp_netvar_def, "namespace zeek { %s IntrusivePtr<EnumType> %s; %s}\n",
 				decl.c_namespace_start.c_str(), decl.bare_name.c_str(), decl.c_namespace_end.c_str());
 			fprintf(fp_netvar_def, "%s EnumType * %s; %s\n",
 				decl.c_namespace_start.c_str(), decl.bare_name.c_str(), decl.c_namespace_end.c_str());
+
 			fprintf(fp_netvar_init,
-				"\t%s = internal_type(\"%s\")->AsEnumType();\n",
+				"\tzeek::%s = zeek::id::find_type<EnumType>(\"%s\");\n",
 				decl.c_fullname.c_str(), decl.bro_fullname.c_str());
+			fprintf(fp_netvar_init,
+				"\t%s = zeek::%s.get();\n",
+				decl.c_fullname.c_str(), decl.c_fullname.c_str());
 
 			record_bif_item(decl.bro_fullname.c_str(), "TYPE");
 			}
@@ -490,21 +511,38 @@ const_def:	TOK_CONST opt_ws TOK_ID opt_ws ':' opt_ws TOK_ID opt_ws ';'
 			set_decl_name($3);
 			int typeidx = get_type_index($7);
 			char accessor[1024];
+			char accessor_smart[1024];
 
 			snprintf(accessor, sizeof(accessor), builtin_types[typeidx].accessor, "");
+			snprintf(accessor_smart, sizeof(accessor_smart), builtin_types[typeidx].accessor_smart, "");
 
 
-			fprintf(fp_netvar_h, "%s extern %s %s; %s\n",
+			fprintf(fp_netvar_h, "namespace zeek { %s extern %s %s; %s }\n",
 					decl.c_namespace_start.c_str(),
+					builtin_types[typeidx].c_type_smart, decl.bare_name.c_str(),
+					decl.c_namespace_end.c_str());
+			fprintf(fp_netvar_h, "%s [[deprecated(\"Remove in v4.1.  Use zeek::%s.\")]] extern %s %s; %s\n",
+					decl.c_namespace_start.c_str(), decl.c_fullname.c_str(),
 					builtin_types[typeidx].c_type, decl.bare_name.c_str(),
+					decl.c_namespace_end.c_str());
+
+			fprintf(fp_netvar_def, "namespace zeek { %s %s %s; %s }\n",
+					decl.c_namespace_start.c_str(),
+					builtin_types[typeidx].c_type_smart, decl.bare_name.c_str(),
 					decl.c_namespace_end.c_str());
 			fprintf(fp_netvar_def, "%s %s %s; %s\n",
 					decl.c_namespace_start.c_str(),
 					builtin_types[typeidx].c_type, decl.bare_name.c_str(),
 					decl.c_namespace_end.c_str());
-			fprintf(fp_netvar_init, "\t%s = internal_const_val(\"%s\")%s;\n",
-				decl.c_fullname.c_str(), decl.bro_fullname.c_str(),
-				accessor);
+
+			fprintf(fp_netvar_init, "\t{\n");
+			fprintf(fp_netvar_init, "\tconst auto& v = zeek::id::find_const%s(\"%s\");\n",
+					builtin_types[typeidx].cast_smart, decl.bro_fullname.c_str());
+			fprintf(fp_netvar_init, "\tzeek::%s = v%s;\n",
+					decl.c_fullname.c_str(), accessor_smart);
+			fprintf(fp_netvar_init, "\t%s = v.get()%s;\n",
+					decl.c_fullname.c_str(), accessor);
+			fprintf(fp_netvar_init, "\t}\n");
 
 			record_bif_item(decl.bro_fullname.c_str(), "CONSTANT");
 			}
@@ -583,15 +621,30 @@ head_1:		TOK_ID opt_ws arg_begin
 			if ( definition_type == FUNC_DEF )
 				{
 				fprintf(fp_func_init,
-					"\t(void) new BuiltinFunc(%s, \"%s\", 0);\n",
+					"\t(void) new BuiltinFunc(zeek::%s_bif, \"%s\", 0);\n",
 					decl.c_fullname.c_str(), decl.bro_fullname.c_str());
 
+				// This is the "canonical" version, with argument type and order
+				// mostly for historical reasons.  There's also no "bro_" prefix
+				// in the function name itself, but does have a "_bif" suffix
+				// to potentially help differentiate from other functions
+				// (e.g. ones at global scope that may be used to implement
+				// the BIF itself).
 				fprintf(fp_func_h,
-					"%sextern BifReturnVal %s(Frame* frame, const zeek::Args*);%s\n",
+					"namespace zeek { %sextern BifReturnVal %s_bif(Frame* frame, const zeek::Args*);%s }\n",
 					decl.c_namespace_start.c_str(), decl.bare_name.c_str(), decl.c_namespace_end.c_str());
 
+				// This is the deprecated, legacy, version of the BIF that
+				// forwards to the "canonical" version.  It also does have
+				// a "bro_" prefix in the name itself, but no "_bif" suffix.
+				fprintf(fp_func_h,
+					"%s [[deprecated(\"Remove in v4.1.  Use zeek::%s_bif.\")]] inline BifReturnVal bro_%s(Frame* frame, const zeek::Args* args)",
+					decl.c_namespace_start.c_str(), decl.c_fullname.c_str(), decl.bare_name.c_str());
+				fprintf(fp_func_h, " { return zeek::%s_bif(frame, args); } %s\n",
+					decl.c_fullname.c_str(), decl.c_namespace_end.c_str());
+
 				fprintf(fp_func_def,
-					"BifReturnVal %s(Frame* frame, const zeek::Args* %s)",
+					"BifReturnVal zeek::%s_bif(Frame* frame, const zeek::Args* %s)",
 					decl.c_fullname.c_str(), arg_list_name);
 
 				record_bif_item(decl.bro_fullname.c_str(), "FUNCTION");
@@ -610,7 +663,7 @@ head_1:		TOK_ID opt_ws arg_begin
 						decl.c_namespace_start.c_str(), decl.bare_name.c_str(), decl.c_namespace_end.c_str());
 
 					fprintf(fp_netvar_init,
-						"\t%s = internal_handler(\"%s\");\n",
+						"\t%s = event_registry->Register(\"%s\");\n",
 						decl.c_fullname.c_str(), decl.bro_fullname.c_str());
 
 					record_bif_item(decl.bro_fullname.c_str(), "EVENT");
