@@ -220,12 +220,12 @@ static void print_event_c_prototype_args(FILE* fp, bool smart)
 static void print_event_c_prototype_header(FILE* fp, bool smart)
 	{
 	if ( smart )
-		fprintf(fp, "namespace zeek { %s void %s(analyzer::Analyzer* analyzer%s",
+		fprintf(fp, "namespace zeek { %s void %s(zeek::analyzer::Analyzer* analyzer%s",
 		        decl.generate_c_namespace_start.c_str(),
 		        decl.enqueue_c_barename.c_str(),
 		        args.size() ? ", " : "" );
 	else
-		fprintf(fp, "%s [[deprecated(\"Remove in 4.1. Use %s.\")]] void %s(analyzer::Analyzer* analyzer%s",
+		fprintf(fp, "%s [[deprecated(\"Remove in 4.1. Use %s.\")]] void %s(zeek::analyzer::Analyzer* analyzer%s",
 		        decl.generate_c_namespace_start.c_str(),
 		        decl.enqueue_c_fullname.c_str(),
 		        decl.generate_bare_name.c_str(),
@@ -240,11 +240,11 @@ static void print_event_c_prototype_header(FILE* fp, bool smart)
 static void print_event_c_prototype_impl(FILE* fp, bool smart)
 	{
 	if ( smart )
-		fprintf(fp, "void %s(analyzer::Analyzer* analyzer%s",
+		fprintf(fp, "void %s(zeek::analyzer::Analyzer* analyzer%s",
 			decl.enqueue_c_fullname.c_str(),
 			args.size() ? ", " : "" );
 	else
-		fprintf(fp, "void %s(analyzer::Analyzer* analyzer%s",
+		fprintf(fp, "void %s(zeek::analyzer::Analyzer* analyzer%s",
 			decl.generate_c_fullname.c_str(),
 			args.size() ? ", " : "" );
 
@@ -266,7 +266,7 @@ static void print_event_c_body(FILE* fp, bool smart)
 
 	BuiltinFuncArg* connection_arg = 0;
 
-	fprintf(fp, "\tmgr.Enqueue(%s, zeek::Args{\n", decl.c_fullname.c_str());
+	fprintf(fp, "\tzeek::event_mgr.Enqueue(%s, zeek::Args{\n", decl.c_fullname.c_str());
 
 	for ( int i = 0; i < (int) args.size(); ++i )
 		{
@@ -631,20 +631,20 @@ head_1:		TOK_ID opt_ws arg_begin
 				// (e.g. ones at global scope that may be used to implement
 				// the BIF itself).
 				fprintf(fp_func_h,
-					"namespace zeek { %sextern BifReturnVal %s_bif(zeek::detail::Frame* frame, const zeek::Args*);%s }\n",
+					"namespace zeek { %sextern zeek::detail::BifReturnVal %s_bif(zeek::detail::Frame* frame, const zeek::Args*);%s }\n",
 					decl.c_namespace_start.c_str(), decl.bare_name.c_str(), decl.c_namespace_end.c_str());
 
 				// This is the deprecated, legacy, version of the BIF that
 				// forwards to the "canonical" version.  It also does have
 				// a "bro_" prefix in the name itself, but no "_bif" suffix.
 				fprintf(fp_func_h,
-					"%s [[deprecated(\"Remove in v4.1.  Use zeek::%s_bif.\")]] inline BifReturnVal bro_%s(zeek::detail::Frame* frame, const zeek::Args* args)",
+					"%s [[deprecated(\"Remove in v4.1.  Use zeek::%s_bif.\")]] inline zeek::detail::BifReturnVal bro_%s(zeek::detail::Frame* frame, const zeek::Args* args)",
 					decl.c_namespace_start.c_str(), decl.c_fullname.c_str(), decl.bare_name.c_str());
 				fprintf(fp_func_h, " { return zeek::%s_bif(frame, args); } %s\n",
 					decl.c_fullname.c_str(), decl.c_namespace_end.c_str());
 
 				fprintf(fp_func_def,
-					"BifReturnVal zeek::%s_bif(zeek::detail::Frame* frame, const zeek::Args* %s)",
+					"zeek::detail::BifReturnVal zeek::%s_bif(zeek::detail::Frame* frame, const zeek::Args* %s)",
 					decl.c_fullname.c_str(), arg_list_name);
 
 				record_bif_item(decl.bro_fullname.c_str(), "FUNCTION");
@@ -655,12 +655,12 @@ head_1:		TOK_ID opt_ws arg_begin
 					{
 					// TODO: add namespace for events here
 					fprintf(fp_netvar_h,
-						"%sextern EventHandlerPtr %s; %s\n",
+						"%sextern zeek::EventHandlerPtr %s; %s\n",
 						decl.c_namespace_start.c_str(), decl.bare_name.c_str(), decl.c_namespace_end.c_str());
 
 					fprintf(fp_netvar_def,
-						"%sEventHandlerPtr %s; %s\n",
-						decl.c_namespace_start.c_str(), decl.bare_name.c_str(), decl.c_namespace_end.c_str());
+					        "%szeek::EventHandlerPtr %s; %s\n",
+					        decl.c_namespace_start.c_str(), decl.bare_name.c_str(), decl.c_namespace_end.c_str());
 
 					fprintf(fp_netvar_init,
 						"\t%s = event_registry->Register(\"%s\");\n",

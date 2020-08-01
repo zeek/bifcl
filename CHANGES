@@ -1,3 +1,14 @@
+1.4.0-6 | 2020-08-01 09:14:45 -0700
+
+  * Move Connection to zeek namespace (Tim Wojtulewicz, Corelight)
+
+  * Move BifReturnVal to zeek::detail namespace (Tim Wojtulewicz, Corelight)
+
+  * Move event code to zeek namespace, rename mgr to event_mgr (Tim Wojtulewicz, Corelight)
+
+  * Move BroFile to zeek namespace, rename to File (Tim Wojtulewicz, Corelight)
+
+  * Move base analyzer classes to zeek namespace (Tim Wojtulewicz, Corelight)
 
 1.4.0 | 2020-07-23 10:10:53 -0700
 
