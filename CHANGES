@@ -1,3 +1,9 @@
+1.4.0-9 | 2020-08-21 08:30:47 -0700
+
+  * Move __RegisterBif from zeek::detail::plugin to zeek::plugin::detail (Tim Wojtulewicz, Corelight)
+
+  * SOURCE_LOCAL is part of the zeek::util::detail namespace now (Tim Wojtulewicz, Corelight)
+
 1.4.0-6 | 2020-08-01 09:14:45 -0700
 
   * Move Connection to zeek namespace (Tim Wojtulewicz, Corelight)
