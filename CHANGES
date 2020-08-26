@@ -1,3 +1,8 @@
+
+1.4.0-11 | 2020-08-26 11:20:13 -0700
+
+  * Rename bro-bif.h to zeek-bif.h (Tim Wojtulewicz, Corelight)
+
 1.4.0-9 | 2020-08-21 08:30:47 -0700
 
   * Move __RegisterBif from zeek::detail::plugin to zeek::plugin::detail (Tim Wojtulewicz, Corelight)
