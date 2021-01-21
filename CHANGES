@@ -1,3 +1,6 @@
+1.5.0-4 | 2021-01-21 10:03:42 -0700
+
+  * support for new FileVal class (Vern Paxson, Corelight)
 
 1.5.0 | 2020-12-04 11:14:48 -0800
 
