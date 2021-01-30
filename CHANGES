@@ -1,3 +1,8 @@
+
+1.5.0-6 | 2021-01-29 16:37:13 -0800
+
+  * Remove v4.1 deprecation warnings (Tim Wojtulewicz, Corelight)
+
 1.5.0-4 | 2021-01-21 10:03:42 -0700
 
   * support for new FileVal class (Vern Paxson, Corelight)
