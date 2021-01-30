@@ -1,4 +1,8 @@
 
+1.5.0-8 | 2021-01-29 21:05:13 -0800
+
+  * GH-1377: Add missing zeek/ to generated header includes (Jon Siwek, Corelight)
+
 1.5.0-6 | 2021-01-29 16:37:13 -0800
 
   * Remove v4.1 deprecation warnings (Tim Wojtulewicz, Corelight)
