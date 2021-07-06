@@ -1,3 +1,7 @@
+1.5.0-14 | 2021-07-06 08:52:10 -0700
+
+  * Updates for building Zeek as a subproject (Seth Hall, Corelight)
+
 1.5.0-12 | 2021-04-29 10:44:10 -0700
 
   * Rename Session::ConnVal() to Session::GetVal() (Tim Wojtulewicz, Corelight)
