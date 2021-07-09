@@ -1,3 +1,7 @@
+1.6.0 | 2021-07-06 08:55:36 -0700
+
+  * Update cmake submodule pointer (Tim Wojtulewicz, Corelight)
+
 1.5.0-14 | 2021-07-06 08:52:10 -0700
 
   * Updates for building Zeek as a subproject (Seth Hall, Corelight)
