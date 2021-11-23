@@ -1,3 +1,11 @@
+1.6.0-2 | 2021-11-23 13:50:42 -0700
+
+  * Allow analyzer to be passed as nullptr for enqueue methods (Tim Wojtulewicz, Corelight)
+
+    This allows the methods to be used in contexts where the analyzer ID
+    is not available or when the ID doesn't matter, such as in packet
+    analyzers.
+
 1.6.0 | 2021-07-06 08:55:36 -0700
 
   * Update cmake submodule pointer (Tim Wojtulewicz, Corelight)
