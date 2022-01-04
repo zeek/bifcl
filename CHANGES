@@ -1,3 +1,7 @@
+1.6.1 | 2021-12-10 09:38:56 -0700
+
+  * Update cmake submodule to latest master (Tim Wojtulewicz, Corelight)
+
 1.6.0-2 | 2021-11-23 13:50:42 -0700
 
   * Allow analyzer to be passed as nullptr for enqueue methods (Tim Wojtulewicz, Corelight)
