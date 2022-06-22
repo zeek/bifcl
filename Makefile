@@ -2,7 +2,7 @@
 # A simple static wrapper for a number of standard Makefile targets,
 # mostly just forwarding to build/Makefile. This is provided only for
 # convenience and supports only a subset of what CMake's Makefile
-# to offer. For more, execute that one directly. 
+# to offer. For more, execute that one directly.
 #
 
 BUILD=build
@@ -26,6 +26,8 @@ dist:
 	@for i in . $$(git submodule foreach -q --recursive realpath --relative-to=$$(pwd) .); do ((cd ../$(VERSION_FULL)/$$i && test -f .git && cp -R $(GITDIR) .gitnew && rm -f .git && mv .gitnew .git && sed -i.bak -e 's#[[:space:]]*worktree[[:space:]]*=[[:space:]]*.*##g' .git/config) || true); done
 	@for i in . $$(git submodule foreach -q --recursive realpath --relative-to=$$(pwd) .); do (cd ../$(VERSION_FULL)/$$i && git reset -q --hard && git clean -ffdxq); done
 	@(cd ../$(VERSION_FULL) && find . -name \.git\* | xargs rm -rf)
+	@(cd ../$(VERSION_FULL) && find . -name \.idea -type d | xargs rm -rf)
+	@(cd ../$(VERSION_FULL) && find . -maxdepth 1 -name build\* | xargs rm -rf)
 	@mv ../$(VERSION_FULL) .
 	@tar -czf $(VERSION_FULL).tar.gz $(VERSION_FULL)
 	@echo Package: $(VERSION_FULL).tar.gz
