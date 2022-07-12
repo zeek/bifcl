@@ -1,3 +1,11 @@
+1.6.2-4 | 2022-07-12 13:55:23 -0700
+
+  * Remove remaining uses of Bro naming (Tim Wojtulewicz, Corelight)
+
+  * Deprecate bro_int_t and bro_uint_t (Tim Wojtulewicz, Corelight)
+
+  * Keep make dist from deleting all paths containing 'build' [skip ci] (Tim Wojtulewicz, Corelight)
+
 1.6.2 | 2022-06-01 09:29:50 -0700
 
   * Release 1.6.2 
