@@ -1,3 +1,9 @@
+1.6.2-12 | 2022-10-18 14:27:38 -0700
+
+  * Bumped cmake submodule commit (Tomer Lev)
+
+  * Adapted bifcl to compile with MSVC for Windows environment. (Elad Solomon)
+
 1.6.2-9 | 2022-10-13 13:58:34 -0500
 
   * Use full path to filename in #line directives in generated code (Tim Wojtulewicz, Corelight)
