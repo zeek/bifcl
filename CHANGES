@@ -1,3 +1,11 @@
+1.6.2-17 | 2022-10-24 08:08:44 -0700
+
+  * Add pre-commit github workflow (Tim Wojtulewicz, Corelight)
+
+  * Add pre-commit configuration and run it on everything (Tim Wojtulewicz, Corelight)
+
+  * Add clang-format and run it on everything (Tim Wojtulewicz, Corelight)
+
 1.6.2-12 | 2022-10-18 14:27:38 -0700
 
   * Bumped cmake submodule commit (Tomer Lev)
