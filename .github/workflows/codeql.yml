@@ -1,11 +1,10 @@
 name: "CodeQL"
 
 on:
-  push:
-    branches: [ 'master' ]
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ 'master' ]
+    branches: [master]
+  push:
+    branches: [master]
   schedule:
     - cron: '47 21 * * 5'
 
@@ -18,11 +17,6 @@ jobs:
       contents: read
       security-events: write
 
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'cpp' ]
-
     steps:
     - uses: actions/setup-python@v4
     - name: Checkout repository
@@ -33,14 +27,14 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        languages: ${{ matrix.language }}
-        queries: +security-and-quality
+        languages: cpp
+        config-file: ./.github/codeql/codeql-config.yml
 
     - run: |
         ./configure
-        make
+        make -j $(nproc)
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
       with:
-        category: "/language:${{matrix.language}}"
+        category: "/language:cpp"

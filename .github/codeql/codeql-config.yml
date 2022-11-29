@@ -1,0 +1,22 @@
+name: "bifcl CodeQL config"
+
+# CodeQL is bizarre -- "paths-ignore" only works for select languages, not
+# including C/C++. Removing the build tree after the build doesn't work either
+# because the build process itself contributes CodeQL data. You also cannot
+# express alert management in-code. So ... all that's left is crude filter
+# management below and battling the UI.
+
+queries:
+  - uses: security-and-quality
+
+query-filters:
+  - exclude:
+      id: cpp/non-constant-format
+  - exclude:
+      id: cpp/include-non-header
+  - exclude:
+      id: cpp/long-switch
+  - exclude:
+      id: cpp/commented-out-code
+  - exclude:
+      id: cpp/use-of-goto
