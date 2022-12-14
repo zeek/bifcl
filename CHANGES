@@ -1,3 +1,14 @@
+1.6.2-28 | 2022-12-14 14:54:23 -0700
+
+  * Adjust CodeQL setup to bifcl (Christian Kreibich, Corelight)
+
+    First real foray into CodeQL and I'm pretty underwhelmed. The warnings are
+    either noise or in bison-generated code, which would be nice to whitelist,
+    except CodeQL gives no way to exclude files for compiled code, and you cannot
+    control alerts in-code. So the only mechanisms remaining are crude wholesale
+    suppression via the config file, and dismissal in the UI, for which there are
+    insufficient options (I went for "won't fix" for these).
+
 1.6.2-21 | 2022-10-26 08:47:22 -0700
 
   * Only adding subdir if running standalone (Tomer Lev)
