@@ -61,7 +61,15 @@ if (MSVC)
     target_link_libraries(bifcl PRIVATE libunistd)
 endif()
 
-install(TARGETS bifcl DESTINATION bin)
+add_executable(Zeek::BifCl ALIAS bifcl)
+set_target_properties(bifcl PROPERTIES EXPORT_NAME BifCl)
+
+install(
+  TARGETS bifcl
+  EXPORT ZeekTargets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT BifCl
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT BifCl
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT BifCl)
 
 if (CMAKE_BUILD_TYPE)
     string(TOUPPER ${CMAKE_BUILD_TYPE} BuildType)
