@@ -1,3 +1,11 @@
+%top{
+// Include stdint.h at the start of the generated file. Typically
+// MSVC will include this header later, after the definitions of
+// the integral type macros. MSVC then complains that about the
+// redefinition of the types. Including stdint.h early avoids this.
+#include <stdint.h>
+}
+
 %{
 #include <ctype.h>
 #include <string.h>
@@ -314,9 +322,9 @@ void finish_alternative_mode()
 // FreeBSD doesn't support LeakSanitizer
 #if defined(USING_ASAN) && !defined(__FreeBSD__)
 	#include <sanitizer/lsan_interface.h>
-	#define BIFCL_LSAN_DISABLE(x) __lsan_disable(x)
+	#define BIFCL_LSAN_DISABLE() __lsan_disable()
 #else
-	#define BIFCL_LSAN_DISABLE(x)
+	#define BIFCL_LSAN_DISABLE()
 #endif
 
 int main(int argc, char* argv[])
@@ -396,7 +404,7 @@ int main(int argc, char* argv[])
 		fprintf(fp_netvar_init, "#pragma GCC diagnostic push\n");
 		fprintf(fp_netvar_init, "#pragma GCC diagnostic ignored \"-Wdeprecated-declarations\"\n\n");
 		fprintf(fp_netvar_init, "#endif\n");
-		
+
 		yy_switch_to_buffer(yy_create_buffer(fp_input, YY_BUF_SIZE));
 		yyparse();
 

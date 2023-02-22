@@ -1,3 +1,9 @@
+1.7.0-3 | 2023-02-22 07:33:15 -0700
+
+  * Include stdint.h early to prevent redefinition of int type macros (Tim Wojtulewicz)
+
+  * Remove argument from BIFCL_LSAN_DISABLE macro to fix warning on Windows (Tim Wojtulewicz)
+
 1.7.0 | 2023-02-01 15:42:00 -0700
 
   * Tag version 1.7.0 (Tim Wojtulewicz, Corelight)
