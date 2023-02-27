@@ -1,3 +1,11 @@
+1.7.0-7 | 2023-02-27 09:33:13 -0700
+
+  * Other minor cleanups (Tim Wojtulewicz, Corelight)
+
+  * Use bools for boolean comparisons (Tim Wojtulewicz, Corelight)
+
+  * Use nullptrs for pointer initializations (Tim Wojtulewicz, Corelight)
+
 1.7.0-3 | 2023-02-22 07:33:15 -0700
 
   * Include stdint.h early to prevent redefinition of int type macros (Tim Wojtulewicz)

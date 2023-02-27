@@ -4,8 +4,6 @@
 #include <string>
 #include <cstring>
 
-using namespace std;
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,7 +15,7 @@ extern int line_number;
 extern char* input_filename;
 extern char* input_filename_with_path;
 extern char* plugin;
-extern int alternative_mode;
+extern bool alternative_mode;
 
 #define print_line_directive(fp) fprintf(fp, "\n#line %d \"%s\"\n", line_number, input_filename_with_path)
 
@@ -29,7 +27,7 @@ extern FILE* fp_netvar_h;
 extern FILE* fp_netvar_def;
 extern FILE* fp_netvar_init;
 
-int in_c_code = 0;
+bool in_c_code = false;
 string current_module = GLOBAL_MODULE_NAME;
 int definition_type;
 string type_name;
@@ -246,7 +244,7 @@ static void print_event_c_body(FILE* fp)
 	fprintf(fp, "\t// allocation.\n");
 	fprintf(fp, "\n");
 
-	BuiltinFuncArg* connection_arg = 0;
+	BuiltinFuncArg* connection_arg = nullptr;
 
 	fprintf(fp, "\tzeek::event_mgr.Enqueue(%s, zeek::Args{\n", decl.c_fullname.c_str());
 
@@ -258,7 +256,7 @@ static void print_event_c_body(FILE* fp)
 
 		if ( args[i]->Type() == TYPE_CONNECTION )
 			{
-			if ( connection_arg == 0 )
+			if ( connection_arg == nullptr )
 				connection_arg = args[i];
 			else
 				{
@@ -567,7 +565,7 @@ plain_head:	head_1 args arg_end opt_ws
 
 head_1:		TOK_ID opt_ws arg_begin
 			{
-			const char* method_type = 0;
+			const char* method_type = nullptr;
 			set_decl_name($1);
 
 			if ( definition_type == FUNC_DEF )
@@ -686,13 +684,13 @@ body:		body_start c_body body_end
 
 c_code_begin:	/* empty */
 			{
-			in_c_code = 1;
+			in_c_code = true;
 			print_line_directive(fp_func_def);
 			}
 	;
 
 c_code_end:	/* empty */
-			{ in_c_code = 0; }
+			{ in_c_code = false; }
 	;
 
 body_start:	TOK_LPB c_code_begin

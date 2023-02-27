@@ -23,7 +23,7 @@ char* copy_string(const char* s)
 
 int line_number = 1;
 
-extern int in_c_code;
+extern bool in_c_code;
 
 int check_c_mode(int t)
 	{
@@ -153,19 +153,19 @@ int yywrap()
 	}
 
 extern int yyparse();
-char* input_filename = 0;
-char* input_filename_with_path = 0;
-char* plugin = 0;
-int   alternative_mode = 0;
+char* input_filename = nullptr;
+char* input_filename_with_path = nullptr;
+char* plugin = nullptr;
+bool  alternative_mode = false;
 
-FILE* fp_zeek_init = 0;
-FILE* fp_func_def = 0;
-FILE* fp_func_h = 0;
-FILE* fp_func_init = 0;
-FILE* fp_func_register = 0;
-FILE* fp_netvar_h = 0;
-FILE* fp_netvar_def = 0;
-FILE* fp_netvar_init = 0;
+FILE* fp_zeek_init = nullptr;
+FILE* fp_func_def = nullptr;
+FILE* fp_func_h = nullptr;
+FILE* fp_func_init = nullptr;
+FILE* fp_func_register = nullptr;
+FILE* fp_netvar_h = nullptr;
+FILE* fp_netvar_def = nullptr;
+FILE* fp_netvar_init = nullptr;
 
 void remove_file(const char *surfix);
 void err_exit(void);
@@ -201,7 +201,7 @@ void init_alternative_mode()
 	fp_func_h = open_output_file("h");
 	fp_func_def = open_output_file("cc");
 	fp_func_init = open_output_file("init.cc");
-	fp_func_register = plugin ? open_output_file("register.cc") : NULL;
+	fp_func_register = plugin ? open_output_file("register.cc") : nullptr;
 
 	fp_netvar_h = fp_func_h;
 	fp_netvar_def = fp_func_def;
@@ -255,7 +255,7 @@ void init_alternative_mode()
 
 	static char name[1024];
 	strncpy(name, input_filename, sizeof(name) - 1);
-	name[sizeof(name) - 1] = 0;
+	name[sizeof(name) - 1] = '\0';
 	char* dot = strchr(name, '.');
 	if ( dot )
 		*dot = '\0';
@@ -264,7 +264,7 @@ void init_alternative_mode()
 		{
 		static char plugin_canon[1024];
 		strncpy(plugin_canon, plugin, sizeof(plugin_canon) - 1);
-		plugin_canon[sizeof(plugin_canon) - 1] = 0;
+		plugin_canon[sizeof(plugin_canon) - 1] = '\0';
 		char* colon = strstr(plugin_canon, "::");
 
 		if ( colon ) {
@@ -339,12 +339,12 @@ int main(int argc, char* argv[])
 		{
 		switch ( opt ) {
 		case 'p':
-			alternative_mode = 1;
+			alternative_mode = true;
 			plugin = (char*) optarg;
 			break;
 
 		case 's':
-			alternative_mode = 1;
+			alternative_mode = true;
 			break;
 
 		default:
@@ -355,10 +355,9 @@ int main(int argc, char* argv[])
 	for ( int i = optind; i < argc; i++ )
 		{
 		FILE* fp_input;
-		char* slash;
 
 		input_filename = input_filename_with_path = argv[i];
-		slash = strrchr(input_filename, '/');
+		char* slash = strrchr(input_filename, '/');
 
 		if ( (fp_input = fopen(input_filename, "r")) == NULL )
 			{
@@ -425,7 +424,7 @@ void close_if_open(FILE **fpp)
 	{
 	if (*fpp)
 		fclose(*fpp);
-	*fpp = NULL;
+	*fpp = nullptr;
 	}
 
 void close_all_output_files(void)
