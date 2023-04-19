@@ -1,3 +1,49 @@
+1.7.0-11 | 2023-04-19 19:28:13 +0200
+
+  * Render runtime type checks for var_args bifs (Arne Welzel, Corelight)
+
+    Currently, Zeek disables any static type checking for var_arg bifs.
+    However, the generated preamble for var_args bifs assume that
+    typed positional arguments are correctly typed and blindly calls
+    the type converters on them. This easily triggers abort()s at runtime
+    currently when a script mistakenly uses the wrong types for var_arg
+    bifs. For example, calling publish_rr() with a port instead of a string
+    causes a hard-abort with Zeek 5.0.8.
+
+        $ zeek -e 'Cluster::publish_rr(Cluster::Pool(), 80/tcp)'
+        fatal error in <no location>: Val::CONVERTER (port/string) (80/tcp)
+        Aborted (core dumped)
+
+    Extend bifcl so that for var_arg functions and the types that bifcl understands,
+    we render a runtime type check and explicit early return to avoid the abort().
+    For any/other types, the implementer of the bif continuous to be responsible
+    for type checking.
+
+    This isn't solving the var_args situation generally, but avoids some
+    ad-hoc fixes trickling in current bif implementations.
+
+    Some references:
+
+    https://github.com/zeek/zeek/issues/1523
+    https://github.com/zeek/zeek/issues/2425
+    https://github.com/zeek/zeek/issues/2935
+    https://github.com/zeek/zeek/pull/2950
+
+  * GH-25: builtin-func.l: Allow more than just one additional component (Arne Welzel, Corelight)
+
+    I'm not sure why this was restricted to only two components,
+    the following appears functional in Zeek scripts.
+
+        module A::B::C;
+
+        export {
+          type MyRecord: record {
+            a: string;
+          };
+        }
+
+    Closes #25.
+
 1.7.0-7 | 2023-02-27 09:33:13 -0700
 
   * Other minor cleanups (Tim Wojtulewicz, Corelight)
