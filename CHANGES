@@ -1,3 +1,7 @@
+1.8.0 | 2023-05-23 10:52:35 -0700
+
+  * Update submodule(s) [nomail] [skip ci] (Tim Wojtulewicz, Corelight)
+
 1.7.0-11 | 2023-04-19 19:28:13 +0200
 
   * Render runtime type checks for var_args bifs (Arne Welzel, Corelight)
