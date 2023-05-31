@@ -1,3 +1,7 @@
+1.8.0-2 | 2023-05-31 14:24:15 +0200
+
+  * Remove vendored CMake files from repo (Tim Wojtulewicz, Corelight)
+
 1.8.0 | 2023-05-23 10:52:35 -0700
 
   * Update submodule(s) [nomail] [skip ci] (Tim Wojtulewicz, Corelight)
