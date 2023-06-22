@@ -1,5 +1,4 @@
-
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
 project(BifCl C CXX)
 
 include(cmake/CommonCMakeConfig.cmake)
@@ -21,7 +20,6 @@ if (MSVC)
 else()
     set_property(SOURCE bif_lex.cc APPEND_STRING PROPERTY COMPILE_FLAGS "-Wno-sign-compare")
 endif()
-include(RequireCXX17)
 
 include_directories(BEFORE
                     ${BifCl_SOURCE_DIR}/include
@@ -50,6 +48,8 @@ set(bifcl_SRCS
 )
 
 add_executable(bifcl ${bifcl_SRCS})
+target_compile_features(bifcl PRIVATE cxx_std_17)
+set_target_properties(bifcl PROPERTIES CXX_EXTENSIONS OFF)
 
 if (MSVC)
     # If building separately from zeek, we need to add the libunistd subdirectory so
