@@ -1,3 +1,9 @@
+1.8.0-14 | 2023-11-06 13:32:55 -0700
+
+  * Update .git-blame-ignore-revs (Tim Wojtulewicz, Corelight)
+
+  * Reformat Bifcl in Spicy style (Tim Wojtulewicz, Corelight)
+
 1.8.0-11 | 2023-08-03 09:36:59 -0700
 
   * Remove usage of FindRequiredPackage (Tim Wojtulewicz, Corelight)
