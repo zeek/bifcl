@@ -214,6 +214,7 @@ void init_alternative_mode()
 
 	fprintf(fp_zeek_init, "# %s\n\n", auto_gen_comment);
 	fprintf(fp_func_def, "// %s\n\n", auto_gen_comment);
+	fprintf(fp_func_h, "#pragma once\n\n");
 	fprintf(fp_func_h, "// %s\n\n", auto_gen_comment);
 	fprintf(fp_func_init, "// %s\n\n", auto_gen_comment);
 
@@ -386,9 +387,11 @@ int main(int argc, char* argv[])
 
 			fprintf(fp_zeek_init, "# %s\n\n", auto_gen_comment);
 			fprintf(fp_func_def, "// %s\n\n", auto_gen_comment);
+			fprintf(fp_func_h, "#pragma once\n\n");
 			fprintf(fp_func_h, "// %s\n\n", auto_gen_comment);
 			fprintf(fp_func_init, "// %s\n\n", auto_gen_comment);
 			fprintf(fp_netvar_def, "// %s\n\n", auto_gen_comment);
+			fprintf(fp_netvar_h, "#pragma once\n\n");
 			fprintf(fp_netvar_h, "// %s\n\n", auto_gen_comment);
 			fprintf(fp_netvar_init, "// %s\n\n", auto_gen_comment);
 			}
