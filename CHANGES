@@ -1,3 +1,7 @@
+1.8.0-16 | 2024-01-22 10:05:00 -0700
+
+  * Make BIFs just return ValPtr directly instead of BifReturnVal (Tim Wojtulewicz, Corelight)
+
 1.8.0-14 | 2023-11-06 13:32:55 -0700
 
   * Update .git-blame-ignore-revs (Tim Wojtulewicz, Corelight)
