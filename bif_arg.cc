@@ -53,12 +53,16 @@ void BuiltinFuncArg::PrintZeek(FILE* fp) {
 
 void BuiltinFuncArg::PrintCDef(FILE* fp, int n, bool runtime_type_check) {
     // Generate a runtime type-check pre-amble for types we understand
+    bool have_null_check = false;
     if ( runtime_type_check && type != TYPE_OTHER && type != TYPE_ANY ) {
         fprintf(fp, "\t\t{\n");
         fprintf(fp, "\t\t// Runtime type check for %s argument\n", name);
+        fprintf(fp, "\t\tif ( (*%s)[%d] == nullptr ){\n", arg_list_name, n);
+        fprintf(fp, "\t\t\tzeek::emit_builtin_error(\"Argument %s is null\");\n", name);
+        fprintf(fp, "\t\t\treturn nullptr;\n");
+        fprintf(fp, "\t\t}\n");
         fprintf(fp, "\t\tzeek::TypeTag __tag = (*%s)[%d]->GetType()->Tag();\n", arg_list_name, n);
-        fprintf(fp, "\t\tif ( __tag != %s )\n", builtin_func_arg_type[type].type_enum);
-        fprintf(fp, "\t\t\t{\n");
+        fprintf(fp, "\t\tif ( __tag != %s ) {\n", builtin_func_arg_type[type].type_enum);
         fprintf(fp,
                 "\t\t\tzeek::emit_builtin_error(zeek::util::fmt(\"expected type %s for %s, got "
                 "%%s\", zeek::type_name(__tag)));\n",
@@ -66,6 +70,8 @@ void BuiltinFuncArg::PrintCDef(FILE* fp, int n, bool runtime_type_check) {
         fprintf(fp, "\t\t\treturn nullptr;\n");
         fprintf(fp, "\t\t\t}\n");
         fprintf(fp, "\t\t}\n");
+
+        have_null_check = true;
     }
     fprintf(fp, "\t%s %s = (%s) (", builtin_func_arg_type[type].c_type, name, builtin_func_arg_type[type].c_type);
 
@@ -75,6 +81,15 @@ void BuiltinFuncArg::PrintCDef(FILE* fp, int n, bool runtime_type_check) {
     fprintf(fp, builtin_func_arg_type[type].accessor, buf);
 
     fprintf(fp, ");\n");
+
+    // For pointer types, validate that the return value is valid to avoid accessing null pointers.
+    std::string_view c_type{builtin_func_arg_type[type].c_type};
+    if ( c_type.back() == '*' && ! have_null_check ) {
+        fprintf(fp, "\tif ( %s == nullptr ) {\n", name);
+        fprintf(fp, "\t\tzeek::emit_builtin_error(\"Value for argument %s is invalid/null\");\n", name);
+        fprintf(fp, "\t\treturn nullptr;\n");
+        fprintf(fp, "\t}\n");
+    }
 }
 
 void BuiltinFuncArg::PrintCArg(FILE* fp, int n) {
