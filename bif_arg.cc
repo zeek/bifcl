@@ -75,6 +75,15 @@ void BuiltinFuncArg::PrintCDef(FILE* fp, int n, bool runtime_type_check) {
     fprintf(fp, builtin_func_arg_type[type].accessor, buf);
 
     fprintf(fp, ");\n");
+
+    // For pointer types, validate that the return value is valid to avoid accessing null pointers.
+    std::string_view c_type{builtin_func_arg_type[type].c_type};
+    if ( c_type.back() == '*' ) {
+        fprintf(fp, "\t if ( %s == nullptr ) {\n", name);
+        fprintf(fp, "\t\tzeek::emit_builtin_error(\"Value for argument %s is invalid/null\");\n", name);
+        fprintf(fp, "\t\treturn nullptr;\n");
+        fprintf(fp, "\t}\n");
+    }
 }
 
 void BuiltinFuncArg::PrintCArg(FILE* fp, int n) {
