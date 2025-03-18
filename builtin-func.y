@@ -74,6 +74,8 @@ void set_definition_type(int type, const char *arg_type_name)
 		type_name = "";
 	}
 
+ void print_enum_type(const char* name) { printf("%s\n", name); }
+
 void set_decl_name(const char *name)
 	{
 	decl.bare_name = extract_var_name(name);
@@ -299,7 +301,7 @@ void record_bif_item(const char* id, const char* type)
 
 %left ',' ':'
 
-%type <str> TOK_C_TOKEN TOK_ID TOK_CSTR TOK_WS TOK_COMMENT TOK_ATTR TOK_INT opt_ws type attr_list opt_attr_list opt_func_attrs
+%type <str> TOK_C_TOKEN TOK_ID TOK_CSTR TOK_WS TOK_COMMENT TOK_ATTR TOK_INT TOK_ENUM opt_ws type attr_list opt_attr_list opt_func_attrs
 %type <val> TOK_ATOM TOK_BOOL
 
 %union	{
@@ -442,6 +444,31 @@ enum_def_1:	TOK_ENUM opt_ws TOK_ID opt_ws TOK_LPB opt_ws
 			{
 			set_definition_type(TYPE_DEF, "Enum");
 			set_decl_name($3);
+
+            std::string enum_type{$1};
+			std::string enum_size;
+            if ( enum_type == "enum_i8" ) {
+                enum_size = "int8_t";
+            }
+            else if ( enum_type == "enum_u8" ) {
+				enum_size = "uint8_t";
+            }
+            else if ( enum_type == "enum_i16" ) {
+                enum_size = "int16_t";
+            }
+            else if ( enum_type == "enum_u16" ) {
+				enum_size = "uint16_t";
+            }
+            else if ( enum_type == "enum_i32" ) {
+                enum_size = "int32_t";
+            }
+            else if ( enum_type == "enum_u32" ) {
+				enum_size = "uint32_t";
+            }
+            else {
+                enum_size.clear();
+            }
+
 			fprintf(fp_zeek_init, "type %s: enum %s{%s", decl.zeek_name.c_str(), $4, $6);
 
 			// this is the namespace were the enumerators are defined, not where
@@ -450,7 +477,12 @@ enum_def_1:	TOK_ENUM opt_ws TOK_ID opt_ws TOK_LPB opt_ws
 			fprintf(fp_netvar_h, "namespace BifEnum { ");
 			if ( decl.module_name != GLOBAL_MODULE_NAME )
 				fprintf(fp_netvar_h, "namespace %s { ", decl.module_name.c_str());
-			fprintf(fp_netvar_h, "enum %s {\n", $3);
+			if ( enum_size.empty() ) {
+                fprintf(fp_netvar_h, "enum %s {\n", $3);
+            }
+            else {
+                fprintf(fp_netvar_h, "enum %s : %s {\n", $3, enum_size.c_str());
+            }
 			}
 	;
 

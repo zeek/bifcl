@@ -27,8 +27,13 @@ extern bool in_c_code;
 
 int check_c_mode(int t)
 	{
-	if ( ! in_c_code )
+	if ( ! in_c_code ) {
+        if ( t == TOK_ENUM ) {
+            yylval.str = copy_string(yytext);
+        }
+
 		return t;
+    }
 
 	yylval.str = copy_string(yytext);
 	return TOK_C_TOKEN;
@@ -77,6 +82,12 @@ HEX	[0-9a-fA-F]+
 "event"		return check_c_mode(TOK_EVENT);
 "const"		return check_c_mode(TOK_CONST);
 "enum"		return check_c_mode(TOK_ENUM);
+"enum_i8"		return check_c_mode(TOK_ENUM);
+"enum_u8"		return check_c_mode(TOK_ENUM);
+"enum_i16"		return check_c_mode(TOK_ENUM);
+"enum_u16"		return check_c_mode(TOK_ENUM);
+"enum_i32"		return check_c_mode(TOK_ENUM);
+"enum_u32"		return check_c_mode(TOK_ENUM);
 "type"		return check_c_mode(TOK_TYPE);
 "record"	return check_c_mode(TOK_RECORD);
 "set"		return check_c_mode(TOK_SET);
