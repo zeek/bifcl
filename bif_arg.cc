@@ -1,10 +1,7 @@
-
-#include <string>
-using namespace std;
-
-#include <string.h>
-
 #include "bif_arg.h"
+
+#include <cstring>
+#include <string_view>
 
 static struct {
     const char* type_enum;
