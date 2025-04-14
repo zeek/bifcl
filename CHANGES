@@ -1,3 +1,11 @@
+1.8.0-27 | 2025-04-14 07:41:41 -0700
+
+  * Update pre-commit versions, remove yapf from pre-commit (Tim Wojtulewicz, Corelight)
+
+  * Reformat CMakeLists via pre-commit (Tim Wojtulewicz, Corelight)
+
+  * Switch namespacing in generated code to C++-17-style nested namespaces (Tim Wojtulewicz, Corelight)
+
 1.8.0-23 | 2025-03-07 10:44:39 -0700
 
   * Add #pragma once to generated headers (Tim Wojtulewicz, Corelight)
