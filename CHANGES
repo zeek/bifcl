@@ -1,3 +1,9 @@
+1.8.0-31 | 2025-05-12 08:49:06 -0700
+
+  * Don't do 'using namespace std' in headers, plus a little cleanup (Tim Wojtulewicz, Corelight)
+
+  * Switch more namespacing in generated code to nested style (Tim Wojtulewicz, Corelight)
+
 1.8.0-27 | 2025-04-14 07:41:41 -0700
 
   * Update pre-commit versions, remove yapf from pre-commit (Tim Wojtulewicz, Corelight)
