@@ -1,11 +1,10 @@
 %{
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <vector>
 #include <set>
 #include <string>
-#include <cstring>
-
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "module_util.h"
 
@@ -38,7 +37,7 @@ string type_name;
 // already been defined/written to the C++ files.
 static std::set<std::string> events;
 
-enum {
+enum : uint8_t {
 	C_SEGMENT_DEF,
 	FUNC_DEF,
 	EVENT_DEF,
@@ -584,7 +583,7 @@ head_1:		TOK_ID opt_ws arg_begin
 			if ( definition_type == FUNC_DEF )
 				{
 				fprintf(fp_func_init,
-					"\t(void) new zeek::detail::BuiltinFunc(zeek::%s_bif, \"%s\", 0);\n",
+					"\t(void) new zeek::detail::BuiltinFunc(zeek::%s_bif, \"%s\", false);\n",
 					decl.c_fullname.c_str(), decl.zeek_fullname.c_str());
 
 				// This is the "canonical" version, with argument type and order

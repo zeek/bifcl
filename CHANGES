@@ -1,3 +1,14 @@
+1.8.0-35 | 2025-05-23 12:55:07 -0700
+
+  * Some other minor cleanup (Tim Wojtulewicz, Corelight)
+
+  * Minor cleanup of include files (Tim Wojtulewicz, Corelight)
+
+  * Pass boolean false to BuiltinFunc constructor instead of zero (Tim Wojtulewicz, Corelight)
+
+    This fixes a modernize-use-bool-literals clang-tidy warning in the
+    generated code.
+
 1.8.0-31 | 2025-05-12 08:49:06 -0700
 
   * Don't do 'using namespace std' in headers, plus a little cleanup (Tim Wojtulewicz, Corelight)
