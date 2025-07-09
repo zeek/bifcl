@@ -1,3 +1,7 @@
+1.8.0-40 | 2025-07-09 13:01:23 -0700
+
+  * Require C++20 for builds (Tim Wojtulewicz, Corelight)
+
 1.8.0-38 | 2025-06-11 10:46:12 -0700
 
   * Add NOLINT for clang-tidy performance-enum-size to generated headers (Tim Wojtulewicz, Corelight)
