@@ -1,5 +1,8 @@
 .. _Zeek: https://www.zeek.org
 
+NOTE: This repository was merged into the main Zeek repo as part of Zeek
+8.1. It is now kept as an archive for historical reasons only.
+
 =================
 Zeek BIF Compiler
 =================
